@@ -1,0 +1,10 @@
+version: '3'
+services:
+  bromigo:
+    container_name: bromigo
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    restart: always
