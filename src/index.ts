@@ -17,7 +17,9 @@ client.on('ready', () => {
 
 
 client.on('messageCreate', async (msg: Message) => {
+  console.log("msgCreate" + msg.content + " " + msg.author.bot)
   if (!msg.content.startsWith(prefix) || msg.author.bot) return;
+  console.log(msg)
 
   const args = <any>msg.content.slice(prefix.length).split(/ +/);
   const command = args[1].toLowerCase();
