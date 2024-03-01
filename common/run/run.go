@@ -12,8 +12,7 @@ import (
 )
 
 func Init() {
-	// Load .env file if it exists
-	_ = godotenv.Load()
+	_ = godotenv.Load() // Load .env file if it exists
 
 	token := os.Getenv("DISCORD_BOT_TOKEN")
 	if token == "" {
@@ -31,8 +30,12 @@ func Init() {
 	// Register the messageCreate func as a callback for MessageCreate events.
 	dg.AddHandler(commands.MessageCreate)
 
-	// In this example, we only care about receiving message events.
-	dg.Identify.Intents = discordgo.IntentsGuildMessages
+	// Register a new handler for voice state updates.
+	// You will need to implement this function in your 'commands' package.
+	dg.AddHandler(commands.VoiceStateUpdate)
+
+	// Update intents to include voice states along with guild messages.
+	dg.Identify.Intents = discordgo.IntentsGuildMessages | discordgo.IntentsGuildVoiceStates
 
 	// Open a websocket connection to Discord and begin listening.
 	err = dg.Open()
@@ -41,12 +44,10 @@ func Init() {
 		return
 	}
 
-	// Wait here until CTRL-C or other term signal is received.
-	fmt.Println("Bot is now running.  Press CTRL-C to exit.")
+	fmt.Println("Bot is now running. Press CTRL-C to exit.")
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
 	<-sc
 
-	// Cleanly close down the Discord session.
-	dg.Close()
+	dg.Close() // Cleanly close down the Discord session.
 }
