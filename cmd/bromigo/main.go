@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/TechGeekInsider/bromigo/common/run"
+	"github.com/bromigos-org/bromigo/common/run"
 )
 
 func main() {

@@ -1,4 +1,4 @@
-module github.com/TechGeekInsider/bromigo
+module github.com/bromigos-org/bromigo
 
 go 1.20
 
