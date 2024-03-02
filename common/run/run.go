@@ -28,14 +28,16 @@ func Init() {
 	}
 
 	// Register event handlers
-	dg.AddHandler(commands.MessageCreate)
-	dg.AddHandler(commands.VoiceStateUpdate)
 	dg.AddHandler(onReady)
 	dg.AddHandler(onDisconnect)
 	dg.AddHandler(onReconnect)
 
-	// Update intents
-	dg.Identify.Intents = discordgo.IntentsGuildMessages | discordgo.IntentsGuildVoiceStates
+	dg.AddHandler(commands.MessageCreate)
+	dg.AddHandler(commands.VoiceStateUpdate)
+	dg.AddHandler(commands.MessageReactionAdd) // Add this line to register the handler for reaction adds
+
+	// Update intents to include message reactions along with guild messages and voice states
+	dg.Identify.Intents = discordgo.IntentsGuildMessages | discordgo.IntentsGuildVoiceStates | discordgo.IntentsGuildMessageReactions
 
 	// Open a websocket connection to Discord and begin listening.
 	err = dg.Open()
