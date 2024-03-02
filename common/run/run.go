@@ -1,7 +1,7 @@
 package run
 
 import (
-	"fmt"
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -16,38 +16,53 @@ func Init() {
 
 	token := os.Getenv("DISCORD_BOT_TOKEN")
 	if token == "" {
-		fmt.Println("Warning: DISCORD_BOT_TOKEN not set in .env, ensure it's set in your environment")
+		log.Println("Warning: DISCORD_BOT_TOKEN not set in .env, ensure it's set in your environment")
 		return
 	}
 
 	// Create a new Discord session using the provided bot token.
 	dg, err := discordgo.New("Bot " + token)
 	if err != nil {
-		fmt.Println("error creating Discord session,", err)
+		log.Printf("Error creating Discord session: %v\n", err)
 		return
 	}
 
-	// Register the messageCreate func as a callback for MessageCreate events.
+	// Register event handlers
 	dg.AddHandler(commands.MessageCreate)
-
-	// Register a new handler for voice state updates.
-	// You will need to implement this function in your 'commands' package.
 	dg.AddHandler(commands.VoiceStateUpdate)
+	dg.AddHandler(onReady)
+	dg.AddHandler(onDisconnect)
+	dg.AddHandler(onReconnect)
 
-	// Update intents to include voice states along with guild messages.
+	// Update intents
 	dg.Identify.Intents = discordgo.IntentsGuildMessages | discordgo.IntentsGuildVoiceStates
 
 	// Open a websocket connection to Discord and begin listening.
 	err = dg.Open()
 	if err != nil {
-		fmt.Println("error opening connection,", err)
+		log.Printf("Error opening connection: %v\n", err)
 		return
 	}
 
-	fmt.Println("Bot is now running. Press CTRL-C to exit.")
+	log.Println("Bot is now running. Press CTRL-C to exit.")
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
 	<-sc
 
 	dg.Close() // Cleanly close down the Discord session.
+}
+
+// onReady is called when the bot is ready to start receiving events.
+func onReady(s *discordgo.Session, event *discordgo.Ready) {
+	log.Println("Bot is ready.")
+}
+
+// onDisconnect is called when the bot disconnects from Discord.
+func onDisconnect(s *discordgo.Session, event *discordgo.Disconnect) {
+	log.Println("Bot disconnected.")
+}
+
+// onReconnect is called when the bot reconnects to Discord.
+func onReconnect(s *discordgo.Session, event *discordgo.Connect) {
+	log.Println("Bot reconnected.")
 }
