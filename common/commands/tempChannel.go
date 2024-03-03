@@ -98,19 +98,13 @@ func MessageReactionAdd(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 
 	// Iterate over botCreatedChannels to find a match for TextChannelID
 	for voiceChannelID, info := range botCreatedChannels {
-		fmt.Println(m.Emoji.Name)
-		fmt.Println(m.ChannelID)
-		fmt.Println(info.TextChannelID)
 		if info.TextChannelID == m.ChannelID && m.Emoji.Name == "alert" { // Use the emoji you want to trigger the rename
-			fmt.Println("In the if statement")
 			// Retrieve the message to get its content for the new channel name
 			msg, err := s.ChannelMessage(m.ChannelID, m.MessageID)
 			if err != nil {
 				fmt.Printf("Error retrieving message: %v\n", err)
 				return
 			}
-
-			fmt.Printf("Message content: %s\n", msg.Content)
 
 			// Use the message content as the new channel name, ensure it meets Discord's channel naming requirements
 			newName := msg.Content
@@ -126,8 +120,6 @@ func MessageReactionAdd(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 			_, err = s.ChannelEdit(voiceChannelID, channelConfig)
 			if err != nil {
 				fmt.Printf("Error renaming channel: %v\n", err)
-			} else {
-				fmt.Printf("Channel %s renamed to %s based on message content\n", voiceChannelID, newName)
 			}
 			break // Exit the loop after renaming
 		}
