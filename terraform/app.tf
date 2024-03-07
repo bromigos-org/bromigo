@@ -21,7 +21,7 @@ resource "digitalocean_app" "app" {
 
 			health_check {
 				http_path = "/health"
-				port      = 80
+				port      = 8080
 			}
     }
   }
