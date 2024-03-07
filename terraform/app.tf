@@ -29,7 +29,7 @@ resource "digitalocean_app" "app" {
     	run_command   = "./main"
 
       github {
-        repo           = "blackflame007/nicklesseos.com"
+        repo           = var.repo_name
         branch         = "main"
         deploy_on_push = true
       }
