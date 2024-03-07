@@ -109,7 +109,6 @@ func VoiceStateUpdate(s *discordgo.Session, v *discordgo.VoiceStateUpdate) {
 			if isEmpty {
 				_, err := s.ChannelDelete(v.BeforeUpdate.ChannelID)
 				if err != nil {
-					fmt.Printf("Error deleting channel: %v\n", err)
 					return
 				}
 
