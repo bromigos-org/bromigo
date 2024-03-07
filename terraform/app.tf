@@ -1,6 +1,6 @@
 resource "digitalocean_app" "app" {
   spec {
-    name   = var.project_name
+    name   = var.app_name
     region = var.region
 
     env {
@@ -24,7 +24,7 @@ resource "digitalocean_app" "app" {
 		}
 
     service {
-      name            = var.project_name
+      name            = var.app_name
       build_command = "go build -o main ./cmd/bromigo/main.go"
     	run_command   = "./main"
 
@@ -35,4 +35,15 @@ resource "digitalocean_app" "app" {
       }
     }
   }
+}
+
+data "digitalocean_project" "project" {
+  name        = var.project_name
+}
+
+resource "digitalocean_project_resources" "project_resources" {
+  project = data.digitalocean_project.project.id
+  resources = [
+     digitalocean_app.app.urn
+  ]
 }

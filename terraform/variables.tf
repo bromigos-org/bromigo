@@ -29,6 +29,11 @@ variable "repo_name" {
 }
 
 variable "project_name" {
+  description = "The name of the DigitalOcean Project"
+  default     = "bromigos"
+}
+
+variable "app_name" {
   description = "The name of the DigitalOcean App"
   default     = "bromigo-app"
   
