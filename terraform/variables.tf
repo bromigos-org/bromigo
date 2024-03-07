@@ -33,3 +33,8 @@ variable "project_name" {
   default     = "bromigo-app"
   
 }
+
+variable "discord_bot_token" {
+  description = "The token for the Discord bot"
+  type        = string
+}
