@@ -29,7 +29,7 @@ resource "digitalocean_app" "app" {
     	run_command   = "./main"
 
       github {
-        repo           = var.repo_name
+        repo           = "bromigos-org/bromigo"
         branch         = "main"
         deploy_on_push = true
       }
