@@ -64,7 +64,7 @@ func VoiceStateUpdate(s *discordgo.Session, v *discordgo.VoiceStateUpdate) {
 			nameToUse = member.Nick
 		}
 
-		channelName := fmt.Sprintf("%s's Channel %d", nameToUse, time.Now().Unix())
+		channelName := fmt.Sprintf("%s's Channel", nameToUse)
 		channel, err := s.GuildChannelCreate(v.GuildID, channelName, discordgo.ChannelTypeGuildVoice)
 		if err != nil {
 			fmt.Printf("Error creating voice channel: %v\n", err)
