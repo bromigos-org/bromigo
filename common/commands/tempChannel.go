@@ -21,20 +21,50 @@ var (
 
 // VoiceStateUpdate handles voice state changes, creating or deleting temporary voice channels
 func VoiceStateUpdate(s *discordgo.Session, v *discordgo.VoiceStateUpdate) {
-	triggerChannelID := "1211873008806010930" // Your trigger channel ID
+	const triggerChannelName = "=Join To Start Game" // Name of the trigger channel
+
+	// Find the trigger channel ID dynamically by name
+	channels, err := s.GuildChannels(v.GuildID)
+	if err != nil {
+		fmt.Printf("Error retrieving channels: %v\n", err)
+		return
+	}
+
+	var triggerChannelID string
+	for _, channel := range channels {
+		if channel.Name == triggerChannelName && channel.Type == discordgo.ChannelTypeGuildVoice {
+			triggerChannelID = channel.ID
+			break
+		}
+	}
+
+	if triggerChannelID == "" {
+		fmt.Println("Trigger channel not found")
+		return
+	}
 
 	// User joins the trigger channel
 	if (v.BeforeUpdate == nil || v.BeforeUpdate.ChannelID != triggerChannelID) && v.ChannelID == triggerChannelID {
 		time.Sleep(1 * time.Second) // Delay to ensure any previous channel deletion is processed
 
-		user, err := s.User(v.UserID)
-		if err != nil {
-			fmt.Printf("Error retrieving user: %v\n", err)
-			return
+		// Create a new voice channel with a unique name
+		// Attempt to get the member from the state
+		member, err := s.State.Member(v.GuildID, v.UserID)
+		if err != nil { // Member not found in state, fall back to API call
+			member, err = s.GuildMember(v.GuildID, v.UserID)
+			if err != nil {
+				fmt.Printf("Error retrieving guild member: %v\n", err)
+				return
+			}
 		}
 
-		// Create a new voice channel with a unique name
-		channelName := fmt.Sprintf("%s's Channel %d", user.Username, time.Now().Unix())
+		// Use member's nickname if available, otherwise use user's username
+		nameToUse := member.User.GlobalName
+		if member.Nick != "" {
+			nameToUse = member.Nick
+		}
+
+		channelName := fmt.Sprintf("%s's Channel %d", nameToUse, time.Now().Unix())
 		channel, err := s.GuildChannelCreate(v.GuildID, channelName, discordgo.ChannelTypeGuildVoice)
 		if err != nil {
 			fmt.Printf("Error creating voice channel: %v\n", err)
