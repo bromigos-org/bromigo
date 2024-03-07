@@ -1,4 +1,4 @@
-resource "digitalocean_app" "nicklesseos-com" {
+resource "digitalocean_app" "app" {
   spec {
     name   = var.project_name
     region = var.region
