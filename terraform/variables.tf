@@ -8,7 +8,7 @@ variable "region" {
 
 variable "do_space_name" {
   description = "The name of your DigitalOcean Space"
-  default     = "bromigo-space"
+  default     = "bromigo-discordbot-space"
 }
 
 
