@@ -14,9 +14,14 @@ resource "digitalocean_app" "app" {
       build_command = "go build -o main ./cmd/bromigo/main.go"
     	run_command   = "./main"
 			github {
-				repo = "bromigos-org/bromigo"
+				repo = var.repo_name
 				branch     = "main"
 				deploy_on_push = true
+			}
+
+			health_check {
+				http_path = "/health"
+				port      = 80
 			}
     }
   }
