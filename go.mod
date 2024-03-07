@@ -3,7 +3,7 @@ module github.com/bromigos-org/bromigo
 go 1.20
 
 require (
-	github.com/bwmarrin/discordgo v0.27.1
+	github.com/bwmarrin/discordgo v0.27.2-0.20240229145039-384ff4e9a9f4
 	github.com/joho/godotenv v1.5.1
 )
 
