@@ -18,12 +18,10 @@ resource "digitalocean_app" "app" {
       value = var.do_space_name
     }
 
-    // Define the domain
-    domain {
-      name     = digitalocean_domain.default.name
-      type     = "PRIMARY"
-      wildcard = false
-    }
+		env {
+			key   = "DISCORD_BOT_TOKEN"
+			value = var.discord_bot_token
+		}
 
     service {
       name            = var.project_name

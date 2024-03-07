@@ -17,7 +17,7 @@ provider "digitalocean" {
 terraform {
   backend "s3" {
     endpoint   = "https://sfo3.digitaloceanspaces.com"  # San Francisco endpoint, closest to Los Angeles
-    key        = "tf/nicklesseos.com/terraform.tfstate"
+    key        = "tf/tfstate-bromigos/terraform.tfstate"
     region     = "us-east-1"                    # Dummy region for AWS S3 compatibility
 
     skip_requesting_account_id = true
