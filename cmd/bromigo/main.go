@@ -5,5 +5,6 @@ import (
 )
 
 func main() {
+	run.StartHTTPServer() // Start the HTTP server for health checks
 	run.Init()
 }
