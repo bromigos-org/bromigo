@@ -19,15 +19,24 @@ jobs:
         - name: Terraform Init
           run: terraform -chdir=terraform init -backend-config="access_key=${{ secrets.DO_SPACES_ACCESS_KEY }}" -backend-config="secret_key=${{ secrets.DO_SPACES_SECRET_KEY }}" -backend-config="bucket=tfstate-echobase"
   
-        - name: Download Terraform Plan Artifact
-          uses: actions/download-artifact@v4
+        - name: Terraform Plan
+          run: terraform -chdir=terraform plan -out=tfplan
+          env:
+            TF_LOG: DEBUG
+            TF_VAR_do_token: ${{ secrets.DO_API_TOKEN }}
+            TF_VAR_do_spaces_access_key: ${{ secrets.DO_SPACES_ACCESS_KEY }}
+            TF_VAR_do_spaces_secret_key: ${{ secrets.DO_SPACES_SECRET_KEY }}
+            TF_VAR_do_space_name: ${{ secrets.DO_SPACE_NAME }}
+            TF_VAR_discord_bot_token: ${{ secrets.DISCORD_BOT_TOKEN }}
+  
+        - name: Save Terraform Plan
+          uses: actions/upload-artifact@v4
           with:
             name: tfplan
-            run-id: ${{ github.event.workflow_run.id }}
-            github-token: ${{ secrets.GITHUB_TOKEN }}
-  
+            path: terraform/tfplan
+        
         - name: Terraform Apply
-          run: terraform apply -auto-approve tfplan
+          run: terraform -chdir=terraform apply -auto-approve tfplan
 
     cleanup:
       runs-on: ubuntu-latest
