@@ -10,11 +10,11 @@ resource "digitalocean_app" "app" {
 
     service {
       name            = var.app_name
-      build_command = "go build -o main ./cmd/bromigo/main.go"
-    	run_command   = "./main"
+      build_command = var.build_command
+    	run_command   = var.run_command
 			github {
 				repo = var.repo_name
-				branch     = "main"
+				branch     = var.repo_branch
 				deploy_on_push = true
 			}
 

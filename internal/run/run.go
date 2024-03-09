@@ -32,7 +32,8 @@ func Init() {
 	dg.AddHandler(onDisconnect)
 	dg.AddHandler(onReconnect)
 
-	dg.AddHandler(commands.MessageCreate)
+	dg.AddHandler(commands.BotMention)
+	dg.AddHandler(commands.VentAnonymously)
 	dg.AddHandler(commands.VoiceStateUpdate)
 	dg.AddHandler(commands.MessageReactionAdd) // Add this line to register the handler for reaction adds
 

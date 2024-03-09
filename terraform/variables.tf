@@ -24,8 +24,12 @@ variable "do_spaces_secret_key" {
 
 variable "repo_name" {
   description = "The name of the GitHub repository"
-  default     = "bromigos-org/bromigo"
-  
+  default     = "bromigos-org/bromigo" 
+}
+
+variable "repo_branch" {  
+  description = "The branch of the GitHub repository"
+  default     = "main"
 }
 
 variable "project_name" {
@@ -43,3 +47,18 @@ variable "discord_bot_token" {
   description = "The token for the Discord bot"
   type        = string
 }
+<<<<<<< HEAD
+=======
+
+variable "build_command" {
+  description = "The build command for the app"
+  default     = "go build -o bromigo ./cmd/bromigo/main.go"
+  
+}
+
+variable "run_command" {
+  description = "The run command for the app"
+  default     = "./bromigo"
+}
+
+>>>>>>> 7424d7f (Added: ventAnonymously)
