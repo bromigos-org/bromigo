@@ -7,12 +7,6 @@ on:
       - 'terraform/**'
 
 jobs:
-    independent_job:
-      runs-on: ubuntu-latest
-      steps:
-        - name: This is an independent job
-          run: echo "This job has no dependencies"
-
     terraform_apply:
       runs-on: ubuntu-latest
       steps:
@@ -22,7 +16,10 @@ jobs:
         - name: Setup Terraform
           uses: hashicorp/setup-terraform@v1
           with:
-            terraform_version: <version>
+            terraform_version: 1.7.4
+  
+        - name: Terraform Init
+          run: terraform init
   
         - name: Download Terraform Plan Artifact
           uses: actions/download-artifact@v2
