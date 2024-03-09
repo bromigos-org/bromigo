@@ -2,9 +2,14 @@ name: Terraform Apply
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
     paths:
       - 'terraform/**'
+
+defaults:
+  run:
+    working-directory: terraform
 
 jobs:
     terraform_apply:
@@ -17,10 +22,10 @@ jobs:
           uses: hashicorp/setup-terraform@v1
   
         - name: Terraform Init
-          run: terraform -chdir=terraform init -backend-config="access_key=${{ secrets.DO_SPACES_ACCESS_KEY }}" -backend-config="secret_key=${{ secrets.DO_SPACES_SECRET_KEY }}" -backend-config="bucket=tfstate-echobase"
+          run: terraform init -backend-config="access_key=${{ secrets.DO_SPACES_ACCESS_KEY }}" -backend-config="secret_key=${{ secrets.DO_SPACES_SECRET_KEY }}" -backend-config="bucket=tfstate-echobase"
   
         - name: Terraform Plan
-          run: terraform -chdir=terraform plan -out=tfplan
+          run: terraform plan -out=tfplan
           env:
             TF_LOG: DEBUG
             TF_VAR_do_token: ${{ secrets.DO_API_TOKEN }}
@@ -29,6 +34,9 @@ jobs:
             TF_VAR_do_space_name: ${{ secrets.DO_SPACE_NAME }}
             TF_VAR_discord_bot_token: ${{ secrets.DISCORD_BOT_TOKEN }}
   
+        - name: Terraform Validate
+          run: terraform validate
+
         - name: Save Terraform Plan
           uses: actions/upload-artifact@v4
           with:
@@ -36,12 +44,4 @@ jobs:
             path: terraform/tfplan
         
         - name: Terraform Apply
-          run: terraform -chdir=terraform apply -auto-approve tfplan
-
-    cleanup:
-      runs-on: ubuntu-latest
-      needs: terraform_apply
-      steps:
-        - name: Clean up Terraform resources
-          run: |
-            rm -rf tfplan
+          run: terraform apply -auto-approve tfplan
