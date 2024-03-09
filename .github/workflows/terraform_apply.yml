@@ -23,10 +23,10 @@ jobs:
           uses: actions/download-artifact@v2
           with:
             name: terraform-plan
-            path: terraform/tfplan
+            path: .
   
         - name: Terraform Apply
-          run: terraform apply tfplan
+          run: terraform apply -auto-approve tfplan
 
     cleanup:
       runs-on: ubuntu-latest
