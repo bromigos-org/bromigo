@@ -1,0 +1,40 @@
+name: CI/CD
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+    independent_job:
+      runs-on: ubuntu-latest
+      steps:
+        - name: This is an independent job
+          run: echo "This job has no dependencies"
+
+    terraform_apply:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v2
+  
+        - name: Setup Terraform
+          uses: hashicorp/setup-terraform@v1
+          with:
+            terraform_version: <version>
+  
+        - name: Download Terraform Plan Artifact
+          uses: actions/download-artifact@v2
+          with:
+            name: terraform-plan
+            path: tfplan
+  
+        - name: Terraform Apply
+          run: terraform apply tfplan
+
+    cleanup:
+      runs-on: ubuntu-latest
+      needs: terraform_apply
+      steps:
+        - name: Clean up Terraform resources
+          run: |
+            rm -rf tfplan
