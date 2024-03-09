@@ -1,6 +1,11 @@
 name: Terraform Plan
 
 on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'terraform/**'
   push:
     branches-ignore:
       - main
@@ -19,6 +24,9 @@ jobs:
 
       - name: Terraform Init
         run: terraform -chdir=terraform init -backend-config="access_key=${{ secrets.DO_SPACES_ACCESS_KEY }}" -backend-config="secret_key=${{ secrets.DO_SPACES_SECRET_KEY }}" -backend-config="bucket=tfstate-echobase"
+
+      - name: Terraform Validate
+        run: terraform validate
 
       - name: Terraform Plan
         run: terraform -chdir=terraform plan -out=tfplan
