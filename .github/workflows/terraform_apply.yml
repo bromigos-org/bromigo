@@ -17,7 +17,7 @@ jobs:
           uses: hashicorp/setup-terraform@v1
   
         - name: Terraform Init
-          run: terraform init
+          run: terraform -chdir=terraform init -backend-config="access_key=${{ secrets.DO_SPACES_ACCESS_KEY }}" -backend-config="secret_key=${{ secrets.DO_SPACES_SECRET_KEY }}" -backend-config="bucket=tfstate-echobase"
   
         - name: Download Terraform Plan Artifact
           uses: actions/download-artifact@v2
