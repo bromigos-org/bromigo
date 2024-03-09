@@ -3,7 +3,6 @@ resource "digitalocean_app" "app" {
     name   = var.app_name
     region = var.region
 
-
 		env {
 			key   = "DISCORD_BOT_TOKEN"
 			value = var.discord_bot_token
