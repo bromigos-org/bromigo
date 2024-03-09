@@ -20,7 +20,7 @@ jobs:
         run: terraform -chdir=terraform init -backend-config="access_key=${{ secrets.DO_SPACES_ACCESS_KEY }}" -backend-config="secret_key=${{ secrets.DO_SPACES_SECRET_KEY }}" -backend-config="bucket=tfstate-echobase"
 
       - name: Terraform Plan
-        run: terraform -chdir=terraform plan -out=tfplan
+        run: terraform -chdir=terraform plan -out=./tfplan
         env:
           TF_LOG: DEBUG
           TF_VAR_do_token: ${{ secrets.DO_API_TOKEN }}
@@ -33,4 +33,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: terraform-plan
-          path: tfplan
+          path: ./tfplan
