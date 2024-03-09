@@ -1,4 +1,4 @@
-name: CI/CD
+name: Terraform Apply
 
 on:
   push:
@@ -20,10 +20,11 @@ jobs:
           run: terraform -chdir=terraform init -backend-config="access_key=${{ secrets.DO_SPACES_ACCESS_KEY }}" -backend-config="secret_key=${{ secrets.DO_SPACES_SECRET_KEY }}" -backend-config="bucket=tfstate-echobase"
   
         - name: Download Terraform Plan Artifact
-          uses: actions/download-artifact@v2
+          uses: actions/download-artifact@v4
           with:
             name: tfplan
-            path: .
+            run-id: ${{ github.event.workflow_run.id }}
+            github-token: ${{ secrets.GITHUB_TOKEN }}
   
         - name: Terraform Apply
           run: terraform apply -auto-approve tfplan
