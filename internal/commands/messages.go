@@ -8,7 +8,7 @@ import (
 
 // This function will be called (due to AddHandler above) every time a new
 // message is created on any channel that the authenticated bot has access to.
-func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
+func BotMention(s *discordgo.Session, m *discordgo.MessageCreate) {
 	// Ignore messages created by the bot itself
 	if m.Author.ID == s.State.User.ID {
 		return
