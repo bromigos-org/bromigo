@@ -47,8 +47,6 @@ variable "discord_bot_token" {
   description = "The token for the Discord bot"
   type        = string
 }
-<<<<<<< HEAD
-=======
 
 variable "build_command" {
   description = "The build command for the app"
