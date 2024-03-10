@@ -58,5 +58,3 @@ variable "run_command" {
   description = "The run command for the app"
   default     = "./bromigo"
 }
-
->>>>>>> 7424d7f (Added: ventAnonymously)
