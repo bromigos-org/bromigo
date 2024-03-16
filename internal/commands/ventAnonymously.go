@@ -9,8 +9,10 @@ import (
 const ventChannelName = "vent-anonymously"
 
 // Use a map to track the IDs of threads recreated by the bot for anonymity.
+// TODO: Use a database to store this information instead of an in-memory map.
 var anonymousThreads = make(map[string]bool)
 
+// VentAnonymously is a handler for messages in the vent-anonymously channel
 func VentAnonymously(s *discordgo.Session, m *discordgo.MessageCreate) {
 	// Ignore messages created by the bot itself
 	if m.Author.ID == s.State.User.ID {
@@ -61,6 +63,7 @@ func VentAnonymously(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 }
 
+// HandleThreadMessages is a handler for messages in threads under the vent-anonymously channel
 func HandleThreadMessages(s *discordgo.Session, m *discordgo.MessageCreate) {
 	// Ignore messages created by the bot itself or messages not in anonymous threads
 	if m.Author.ID == s.State.User.ID || !anonymousThreads[m.ChannelID] {
@@ -81,6 +84,7 @@ func HandleThreadMessages(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 }
 
+// isThreadUnderVentChannel checks if a thread is under the vent-anonymously channel
 func isThreadUnderVentChannel(s *discordgo.Session, channel *discordgo.Channel) bool {
 	if channel.Type != discordgo.ChannelTypeGuildPublicThread && channel.Type != discordgo.ChannelTypeGuildPrivateThread {
 		return false
