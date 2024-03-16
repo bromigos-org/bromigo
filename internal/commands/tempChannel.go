@@ -15,8 +15,8 @@ type ChannelInfo struct {
 }
 
 var (
-	botCreatedChannels = make(map[string]ChannelInfo)
-	mutex              sync.Mutex // Mutex to protect access to botCreatedChannels
+	botCreatedChannels = make(map[string]ChannelInfo) // TODO: Use a database to store this information instead of an in-memory map.
+	mutex              sync.Mutex                     // Mutex to protect access to botCreatedChannels
 )
 
 // VoiceStateUpdate handles voice state changes, creating or deleting temporary voice channels
@@ -30,21 +30,20 @@ func VoiceStateUpdate(s *discordgo.Session, v *discordgo.VoiceStateUpdate) {
 		return
 	}
 
-	var triggerChannelID string
+	var triggerChannel *discordgo.Channel
 	for _, channel := range channels {
 		if channel.Name == triggerChannelName && channel.Type == discordgo.ChannelTypeGuildVoice {
-			triggerChannelID = channel.ID
+			triggerChannel = channel
 			break
 		}
 	}
 
-	if triggerChannelID == "" {
+	if triggerChannel == nil {
 		fmt.Println("Trigger channel not found")
 		return
 	}
-
 	// User joins the trigger channel
-	if (v.BeforeUpdate == nil || v.BeforeUpdate.ChannelID != triggerChannelID) && v.ChannelID == triggerChannelID {
+	if (v.BeforeUpdate == nil || v.BeforeUpdate.ChannelID != triggerChannel.ID) && v.ChannelID == triggerChannel.ID {
 		time.Sleep(1 * time.Second) // Delay to ensure any previous channel deletion is processed
 
 		// Create a new voice channel with a unique name
@@ -65,7 +64,11 @@ func VoiceStateUpdate(s *discordgo.Session, v *discordgo.VoiceStateUpdate) {
 		}
 
 		channelName := fmt.Sprintf("%s's Channel", nameToUse)
-		channel, err := s.GuildChannelCreate(v.GuildID, channelName, discordgo.ChannelTypeGuildVoice)
+		channel, err := s.GuildChannelCreateComplex(v.GuildID, discordgo.GuildChannelCreateData{
+			Name:     channelName,
+			Type:     discordgo.ChannelTypeGuildVoice,
+			ParentID: triggerChannel.ParentID, // Set the new channel in the same category as the trigger channel
+		})
 		if err != nil {
 			fmt.Printf("Error creating voice channel: %v\n", err)
 			return
@@ -83,7 +86,7 @@ func VoiceStateUpdate(s *discordgo.Session, v *discordgo.VoiceStateUpdate) {
 			s.ChannelDelete(channel.ID) // Delete the channel if the user couldn't be moved
 			return
 		}
-	} else if v.BeforeUpdate != nil && v.ChannelID != triggerChannelID {
+	} else if v.BeforeUpdate != nil && v.ChannelID != triggerChannel.ID {
 		// User leaves a bot-created channel
 		mutex.Lock()
 		channelInfo, exists := botCreatedChannels[v.BeforeUpdate.ChannelID]
