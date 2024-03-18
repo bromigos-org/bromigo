@@ -16,12 +16,22 @@ func BotMention(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	// Check if the bot was mentioned as the first part of the message
 	if len(m.Mentions) > 0 && m.Mentions[0].ID == s.State.User.ID {
-		prefix := strings.TrimSpace(strings.TrimPrefix(m.Content, "<@"+s.State.User.ID+">"))
+		// Split the message content into a command and its arguments
+		parts := strings.Fields(m.Content)
+
+		if len(parts) < 1 {
+			return
+		}
+
+		prefix := parts[1]
+
 		switch prefix {
 		case "ping":
 			s.ChannelMessageSend(m.ChannelID, "Pong!")
 		case "help":
 			Help(s, m)
+		case "mpost":
+			PostToChannel(s, m)
 		}
 	}
 }
