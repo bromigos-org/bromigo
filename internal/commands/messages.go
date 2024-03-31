@@ -32,6 +32,8 @@ func BotMention(s *discordgo.Session, m *discordgo.MessageCreate) {
 			Help(s, m)
 		case "mpost":
 			PostToChannel(s, m)
+		case "mdelete":
+			DeleteMessages(s, m)
 		}
 	}
 }
