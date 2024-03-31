@@ -47,6 +47,7 @@ func DeleteMessages(s *discordgo.Session, m *discordgo.MessageCreate) {
 		// For example, 8 (Administrator permission) AND 8 is 8, which is non-zero
 		// 8 AND 16 is 0, as the bits do not overlap
 		// https://github.com/discord/discord-api-docs/blob/main/docs/topics/Permissions.md
+		// https://discordjs.guide/popular-topics/permissions-extended.html#discord-s-permission-system
 		if role.Permissions&discordgo.PermissionAdministrator != 0 {
 			hasAdminPermission = true
 			break
