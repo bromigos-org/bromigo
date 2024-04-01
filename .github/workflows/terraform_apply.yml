@@ -1,9 +1,7 @@
 name: Terraform Apply
 
 on:
-  pull_request:
-    types:
-      - closed
+  push:
     branches:
       - main
 
@@ -13,7 +11,6 @@ defaults:
 
 jobs:
   terraform_apply:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
