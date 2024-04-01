@@ -4,13 +4,9 @@ on:
   pull_request:
     branches:
       - main
-    paths:
-      - "terraform/**"
   push:
     branches-ignore:
       - main
-    paths:
-      - "terraform/**"
 
 jobs:
   terraform_plan:
