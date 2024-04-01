@@ -38,7 +38,8 @@ func Init() {
 	dg.AddHandler(commands.VoiceStateUpdate)
 	dg.AddHandler(commands.MessageReactionAdd)
 
-	dg.Identify.Intents = discordgo.IntentsGuildMessages | discordgo.IntentsGuildVoiceStates | discordgo.IntentsGuildMessageReactions | discordgo.IntentMessageContent
+	// debug // dg.Identify.Intents = discordgo.IntentsAll
+	dg.Identify.Intents = discordgo.IntentsGuildMessages | discordgo.IntentsGuildVoiceStates | discordgo.IntentsGuildMessageReactions | discordgo.IntentMessageContent | discordgo.IntentsDirectMessages | discordgo.IntentsGuilds | discordgo.IntentGuildMessages | discordgo.IntentsGuildMembers | discordgo.IntentsGuildPresences
 
 	// Open a websocket connection to Discord and begin listening.
 	err = dg.Open()
