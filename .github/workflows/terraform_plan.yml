@@ -5,14 +5,14 @@ on:
     branches:
       - main
     paths:
-      - 'terraform/**'
+      - "terraform/**"
   push:
     branches-ignore:
       - main
     paths:
-      - 'terraform/**'
+      - "terraform/**"
 
-jobs:        
+jobs:
   terraform_plan:
     runs-on: ubuntu-latest
     steps:
