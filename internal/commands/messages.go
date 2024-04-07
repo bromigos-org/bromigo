@@ -18,6 +18,9 @@ func BotMention(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if len(m.Mentions) > 0 && m.Mentions[0].ID == s.State.User.ID {
 		// Split the message content into a command and its arguments
 		parts := strings.Fields(m.Content)
+		stuff := strings.Split(m.Content, " ")
+
+		// Check if the message contains a command
 
 		if len(parts) < 1 {
 			return
